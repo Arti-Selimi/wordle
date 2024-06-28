@@ -1,3 +1,4 @@
+
 import React, { useEffect, useContext } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
@@ -12,21 +13,24 @@ const fetchData = async (givenWord) => {
 
 const CheckWord = (props) => {
   const givenWord = props.currentWord[props.currentRow].join("");
-  const { setWordExists, setIsEnter, setIsLoading } = useContext(wordleContext);
+  const { setWordExists, inputValues, isEnter, setIsEnter, setIsLoading } =
+    useContext(wordleContext);
 
-  const { isLoading, data } = useQuery(
+  const { isLoading, error, data } = useQuery(
     "wordData",
     () => fetchData(givenWord),
     {
-      enabled: givenWord.length === 5 && props.inputValues[props.currentRow][4] !== "",
+      enabled:
+        givenWord.length === 5 && inputValues[props.currentRow][4] !== "",
     }
   );
 
-  useEffect(() => {
-    if (isLoading) {
-      setIsLoading(isLoading); // Update loading state
-    }
+  console.log(givenWord)
 
+  useEffect(() => {
+    if(isEnter) {
+      setIsLoading(isLoading)
+    }
     if (data) {
       console.log(data);
       const word = data[0]?.hwi?.hw;
@@ -42,7 +46,8 @@ const CheckWord = (props) => {
     }
   }, [isLoading, data, setWordExists, setIsEnter, setIsLoading, props]);
 
-  return null; // Ensure you return something, even if it's null
-};
+  return null;
+
+}
 
 export default CheckWord;
